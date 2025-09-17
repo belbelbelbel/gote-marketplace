@@ -45,7 +45,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isOpen, setIsOpen] = useState(false)
   const { user } = useAuth()
 
-  // Firestore cart functions
   const { getUserCart, setUserCart } = require("@/lib/firestore")
 
   // Load cart from Firestore on mount or user change

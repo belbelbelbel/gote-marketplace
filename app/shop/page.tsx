@@ -342,6 +342,7 @@ export default function ShopPage() {
                               src={product.image || "/placeholder.svg"}
                               alt={product.name}
                               className="w-24 h-24 object-cover rounded-lg cursor-pointer"
+                              loading="lazy"
                             />
                           </Link>
                           <div className="flex-1 space-y-2">

@@ -21,7 +21,7 @@ export default function ProductEditPage() {
     async function fetchProduct() {
       setLoading(true)
       try {
-        const prod = await getProductById(id)
+        const prod:any = await getProductById(id)
         setProduct(prod)
         setForm({
           title: prod.title,

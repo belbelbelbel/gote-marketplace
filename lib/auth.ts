@@ -94,7 +94,7 @@ export const logOut = async () => {
   }
 }
 
-// Get user profile from Firestore
+
 export const getUserProfile = async (uid: string): Promise<UserProfile | null> => {
   const db = getDbInstance()
 

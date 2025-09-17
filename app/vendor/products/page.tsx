@@ -14,9 +14,6 @@ import { Plus, Search, MoreHorizontal, Edit, Trash2, Eye, Package } from "lucide
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-
-// ...existing code...
-
 const VendorProductsPage = () => {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
@@ -26,7 +23,7 @@ const VendorProductsPage = () => {
   const { user } = useAuth()
 
   useEffect(() => {
-    if (!user && !showAll) return; // Wait for user to load before fetching vendor products
+    if (!user && !showAll) return;
     const fetchProducts = async () => {
       setLoading(true)
       try {
@@ -81,7 +78,6 @@ const VendorProductsPage = () => {
   return (
     <VendorLayout>
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-3xl font-bold text-balance">Products</h1>
@@ -110,8 +106,6 @@ const VendorProductsPage = () => {
             </Button>
           </div>
         </div>
-
-        {/* Search and Filters */}
         <Card>
           <CardHeader>
             <CardTitle>Product Inventory</CardTitle>
@@ -129,7 +123,6 @@ const VendorProductsPage = () => {
                 />
               </div>
             </div>
-
             <div className="rounded-md border">
               <Table>
                 <TableHeader>

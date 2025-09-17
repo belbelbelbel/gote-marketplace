@@ -99,7 +99,7 @@ export default function CartPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-destructive hover:text-destructive"
+                          className="text-destructive hover-text-white"
                           onClick={() => removeItem(item.productId)}
                         >
                           <Trash2 className="h-4 w-4 mr-2" />

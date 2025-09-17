@@ -91,6 +91,32 @@ const mockProducts = [
     reviews: 92,
     featured: true,
   },
+    {
+    id: "7",
+    title: "alert open shop",
+    description: "Single origin premium roasted coffee beans",
+    price: 16.99,
+    originalPrice: 25.99,
+    category: "Food",
+    images: ["/heroimg8.jpg"],
+    vendorName: "RoastMaster",
+    rating: 4.8,
+    reviews: 92,
+    featured: true,
+  },
+      {
+    id: "7",
+    title: "Spayce rental view",
+    description: "Single origin premium roasted coffee beans",
+    price: 36.99,
+    originalPrice: 25.99,
+    category: "Food",
+    images: ["/heroimg9.jpg"],
+    vendorName: "RoastMaster",
+    rating: 4.8,
+    reviews: 92,
+    featured: true,
+  },
 ]
 
 export default function FeaturedProducts() {
@@ -127,15 +153,15 @@ export default function FeaturedProducts() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6  sm:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
-            <Card key={product.id} className="group overflow-hidden hover:shadow-lg transition-all duration-300">
-              <div className="relative aspect-square overflow-hidden">
+            <Card key={product.id} className="group overflow-hidden  transition-all duration-300">
+              <div className="relative h-60 w-full aspect-square overflow-hidden">
                 <Image
                   src={product.images[0] || "/placeholder.svg"}
                   alt={product.title}
                   fill
-                  className="object-cover group-hover:scale-105  w-100 transition-transform duration-300"
+                  className="object-cover group-hover:scale-105   transition-transform duration-300"
                 />
                 {product.originalPrice > product.price && (
                   <Badge className="absolute top-3 left-3 bg-accent text-accent-foreground">
@@ -144,8 +170,8 @@ export default function FeaturedProducts() {
                 )}
               </div>
 
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-2">
+              <CardContent className="px-4">
+                <div className="flex items-center gap-2 mb-0">
                   <div className="flex items-center">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                     <span className="text-sm font-medium ml-1">{product.rating}</span>
@@ -168,7 +194,7 @@ export default function FeaturedProducts() {
                 <p className="text-xs text-muted-foreground">Sold by {product.vendorName}</p>
               </CardContent>
 
-              <CardFooter className="p-4 pt-0">
+              <CardFooter className="px-4 pt-0">
                 <Button className="w-full" onClick={() => addToCart(product)}>
                   <ShoppingCart className="h-4 w-4 mr-2" />
                   Add to Cart

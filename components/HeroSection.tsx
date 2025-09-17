@@ -4,12 +4,12 @@ import Link from "next/link"
 export default function HeroSection() {
   return (
     <section className="relative bg-gradient-to-br  h-[47rem] flex items-center from-background via-muted/50 to-background py-16 md:py-24" style={{
-      backgroundImage: `url('/ceramic-plant-pots.png')`,
+      backgroundImage: `url('/hero-img.jpg')`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
     }}>
-      <div className="inset-0 bg-black opacity-70  z-10 absolute"></div>
+      <div className="inset-0 bg-black opacity-80  z-10 absolute"></div>
       <div className="container mx-auto text-white z-40 px-4">
         <div className="mx-auto max-w-4xl text-center">
           <h1 className="text-4xl font-bold tracking-tight  text-balance sm:text-5xl md:text-6xl">
