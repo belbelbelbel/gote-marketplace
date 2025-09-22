@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -18,40 +18,6 @@ import Footer from "@/components/Footer"
 import ProtectedRoute from "@/components/auth/ProtectedRoute"
 import { useAuth } from "@/contexts/AuthContext"
 import { MessageCircle, Ticket, HelpCircle, Clock, CheckCircle, AlertCircle, Loader2 } from "lucide-react"
-
-// Mock data for user's tickets
-const mockTickets = [
-  {
-    id: "TKT-001",
-    subject: "Order not received",
-    description: "I placed an order 5 days ago but haven't received it yet",
-    status: "in-progress",
-    priority: "medium",
-    createdAt: new Date("2024-01-10"),
-    lastUpdate: new Date("2024-01-12"),
-    assignedTo: "Sarah Johnson (CSA)",
-  },
-  {
-    id: "TKT-002",
-    subject: "Defective product",
-    description: "The headphones I received have a crackling sound in the left ear",
-    status: "resolved",
-    priority: "high",
-    createdAt: new Date("2024-01-08"),
-    lastUpdate: new Date("2024-01-09"),
-    assignedTo: "TechStore Pro (Vendor)",
-  },
-  {
-    id: "TKT-003",
-    subject: "Refund request",
-    description: "I'd like to return an item that doesn't fit properly",
-    status: "open",
-    priority: "low",
-    createdAt: new Date("2024-01-15"),
-    lastUpdate: new Date("2024-01-15"),
-    assignedTo: "Pending assignment",
-  },
-]
 
 const issueTypes = [
   "Order Issues",
@@ -77,13 +43,66 @@ export default function SupportPage() {
     orderId: "",
   })
 
+  // State for user's tickets
+  const [userTickets, setUserTickets] = useState<any[]>([])
+  const [loadingTickets, setLoadingTickets] = useState(false)
+
+  // Load user's tickets
+  useEffect(() => {
+    const loadTickets = async () => {
+      if (user && activeTab === "tickets") {
+        setLoadingTickets(true)
+        try {
+          const { getSupportTickets } = await import("@/lib/firestore")
+          const tickets = await getSupportTickets({ customerId: user.uid })
+          setUserTickets(tickets)
+        } catch (error) {
+          console.error("Error loading tickets:", error)
+        } finally {
+          setLoadingTickets(false)
+        }
+      }
+    }
+    loadTickets()
+  }, [user, activeTab])
+
   const handleTicketSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
     try {
-      // Simulate ticket creation
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const { createSupportTicket, createNotification } = await import("@/lib/firestore")
+      const { Timestamp } = await import("firebase/firestore")
+
+      const ticketData = {
+        customerId: user?.uid!,
+        subject: ticketForm.subject,
+        description: ticketForm.description,
+        status: "open" as const,
+        priority: ticketForm.priority as "low" | "medium" | "high" | "urgent",
+        messages: [
+          {
+            senderId: user?.uid!,
+            senderRole: "customer" as const,
+            message: ticketForm.description,
+            timestamp: Timestamp.now(),
+          },
+        ],
+      }
+
+      const ticketId = await createSupportTicket(ticketData)
+      console.log("Ticket created with ID:", ticketId)
+
+      // Notify admin/CSA
+      await createNotification({
+        userId: "admin", // Assuming admin user ID, or broadcast to all admins
+        type: "ticket",
+        title: "New Support Ticket",
+        message: `New ticket: ${ticketForm.subject}`,
+        read: false,
+        relatedId: ticketId,
+      })
+
       setSubmitSuccess(true)
       setTicketForm({
         subject: "",
@@ -204,38 +223,51 @@ export default function SupportPage() {
                     <CardDescription>Track the status of your support requests</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      {mockTickets.map((ticket) => (
-                        <div key={ticket.id} className="border rounded-lg p-4 space-y-3">
-                          <div className="flex items-start justify-between">
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium">{ticket.subject}</span>
-                                {getStatusIcon(ticket.status)}
+                    {loadingTickets ? (
+                      <div className="text-center py-8">
+                        <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+                        <p>Loading your tickets...</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {userTickets.length === 0 ? (
+                          <p className="text-center text-muted-foreground py-8">No tickets found.</p>
+                        ) : (
+                          userTickets.map((ticket) => (
+                            <div key={ticket.id} className="border rounded-lg p-4 space-y-3">
+                              <div className="flex items-start justify-between">
+                                <div className="space-y-1">
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-medium">{ticket.subject}</span>
+                                    {getStatusIcon(ticket.status)}
+                                  </div>
+                                  <p className="text-sm text-muted-foreground line-clamp-2">{ticket.description}</p>
+                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <span>#{ticket.id}</span>
+                                    <span>•</span>
+                                    <span>Created {ticket.createdAt?.toDate?.()?.toLocaleDateString() || 'Unknown'}</span>
+                                    <span>•</span>
+                                    <span>Updated {ticket.updatedAt?.toDate?.()?.toLocaleDateString() || 'Unknown'}</span>
+                                  </div>
+                                </div>
+                                <div className="flex flex-col items-end gap-2">
+                                  {getStatusBadge(ticket.status)}
+                                  {getPriorityBadge(ticket.priority)}
+                                </div>
                               </div>
-                              <p className="text-sm text-muted-foreground line-clamp-2">{ticket.description}</p>
-                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <span>#{ticket.id}</span>
-                                <span>•</span>
-                                <span>Created {ticket.createdAt.toLocaleDateString()}</span>
-                                <span>•</span>
-                                <span>Updated {ticket.lastUpdate.toLocaleDateString()}</span>
+                              <div className="flex items-center justify-between pt-2 border-t">
+                                <span className="text-sm text-muted-foreground">
+                                  Assigned to: {ticket.assignedTo || 'Unassigned'}
+                                </span>
+                                <Button variant="outline" size="sm">
+                                  View Details
+                                </Button>
                               </div>
                             </div>
-                            <div className="flex flex-col items-end gap-2">
-                              {getStatusBadge(ticket.status)}
-                              {getPriorityBadge(ticket.priority)}
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between pt-2 border-t">
-                            <span className="text-sm text-muted-foreground">Assigned to: {ticket.assignedTo}</span>
-                            <Button variant="outline" size="sm">
-                              View Details
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                          ))
+                        )}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>

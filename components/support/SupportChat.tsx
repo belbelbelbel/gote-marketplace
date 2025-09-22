@@ -10,7 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useAuth } from "@/contexts/AuthContext"
-import { analyzeQuery } from "@/lib/ai-support"
+import { analyzeQueryWithGemini } from "@/lib/gemini-ai"
 import { Send, Bot, User, Loader2, MessageCircle } from "lucide-react"
 
 interface Message {
@@ -119,8 +119,13 @@ export default function SupportChat({ ticketId, onEscalate }: SupportChatProps) 
       })
 
       try {
-        // Get AI response
-        const aiResponse = await analyzeQuery(userMessage)
+        // Get AI response with context
+        const aiResponse = await analyzeQueryWithGemini(userMessage, {
+          userId: user?.uid,
+          userRole: userProfile?.role || 'customer',
+          userEmail: user?.email,
+          conversationHistory: messages.slice(-5) // Last 5 messages for context
+        })
 
         // Remove typing indicator
         setMessages((prev) => prev.filter((msg) => !msg.isTyping))

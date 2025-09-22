@@ -1,105 +1,67 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import VendorLayout from "@/components/vendor/VendorLayout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { AlertCircle, CheckCircle, Clock, Filter } from "lucide-react"
-
-// Mock vendor tickets
-const mockVendorTickets = [
-  {
-    id: "TKT-V001",
-    customerId: "customer_123",
-    customerName: "John Doe",
-    subject: "Product not as described",
-    description: "The wireless headphones don't have noise cancellation as advertised",
-    status: "open",
-    priority: "high",
-    productId: "prod_001",
-    productName: "Wireless Bluetooth Headphones",
-    orderId: "ORD-12345",
-    createdAt: new Date("2024-01-15"),
-    lastUpdate: new Date("2024-01-15"),
-    messages: [
-      {
-        senderId: "customer_123",
-        senderRole: "customer",
-        message:
-          "I received the headphones but they don't have the noise cancellation feature that was advertised. I'd like a refund or exchange.",
-        timestamp: new Date("2024-01-15T10:30:00"),
-      },
-    ],
-  },
-  {
-    id: "TKT-V002",
-    customerId: "customer_456",
-    customerName: "Jane Smith",
-    subject: "Shipping delay inquiry",
-    description: "Customer asking about delayed shipment",
-    status: "in-progress",
-    priority: "medium",
-    productId: "prod_002",
-    productName: "Smart Fitness Watch",
-    orderId: "ORD-12346",
-    createdAt: new Date("2024-01-14"),
-    lastUpdate: new Date("2024-01-15"),
-    messages: [
-      {
-        senderId: "customer_456",
-        senderRole: "customer",
-        message:
-          "Hi, I ordered a fitness watch 5 days ago but haven't received any shipping updates. Can you please check the status?",
-        timestamp: new Date("2024-01-14T14:20:00"),
-      },
-      {
-        senderId: "vendor_current",
-        senderRole: "vendor",
-        message:
-          "Hi Jane, I apologize for the delay. Your order is being prepared for shipment and should go out tomorrow. You'll receive tracking information via email.",
-        timestamp: new Date("2024-01-15T09:15:00"),
-      },
-    ],
-  },
-  {
-    id: "TKT-V003",
-    customerId: "customer_789",
-    customerName: "Mike Johnson",
-    subject: "Defective product received",
-    description: "Product arrived damaged, customer wants replacement",
-    status: "resolved",
-    priority: "high",
-    productId: "prod_003",
-    productName: "Bluetooth Speaker",
-    orderId: "ORD-12347",
-    createdAt: new Date("2024-01-12"),
-    lastUpdate: new Date("2024-01-13"),
-    messages: [
-      {
-        senderId: "customer_789",
-        senderRole: "customer",
-        message: "The speaker arrived with a cracked case and doesn't turn on. I need a replacement.",
-        timestamp: new Date("2024-01-12T16:45:00"),
-      },
-      {
-        senderId: "vendor_current",
-        senderRole: "vendor",
-        message:
-          "I'm so sorry about this! I'll send a replacement immediately via express shipping. You should receive it within 2 days.",
-        timestamp: new Date("2024-01-12T17:30:00"),
-      },
-    ],
-  },
-]
+import { AlertCircle, CheckCircle, Clock, Filter, Loader2 } from "lucide-react"
+import { useAuth } from "@/contexts/AuthContext"
+import type { SupportTicket } from "@/lib/firestore"
 
 export default function VendorSupportPage() {
-  const [tickets, setTickets] = useState(mockVendorTickets)
+  const { user } = useAuth()
+  const [tickets, setTickets] = useState<any[]>([])
   const [selectedTicket, setSelectedTicket] = useState<any>(null)
   const [replyMessage, setReplyMessage] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [priorityFilter, setPriorityFilter] = useState("all")
+  const [loading, setLoading] = useState(true)
+
+  // Load tickets assigned to this vendor
+  useEffect(() => {
+    const loadTickets = async () => {
+      if (!user) return
+
+      try {
+        const { getSupportTickets } = await import("@/lib/firestore")
+        const { getUserProfile } = await import("@/lib/auth")
+        const allTickets = await getSupportTickets()
+
+        // Filter tickets assigned to this vendor
+        const vendorTickets = allTickets.filter((ticket: any) => ticket.vendorId === user.uid)
+
+        // Enrich tickets with customer names
+        const enrichedTickets = await Promise.all(
+          vendorTickets.map(async (ticket: any) => {
+            let customerName = "Unknown Customer"
+
+            try {
+              if (ticket.customerId) {
+                const customerProfile = await getUserProfile(ticket.customerId)
+                customerName = customerProfile?.displayName || "Unknown Customer"
+              }
+            } catch (error) {
+              console.error("Error fetching customer profile:", error)
+            }
+
+            return {
+              ...ticket,
+              customerName,
+            }
+          })
+        )
+
+        setTickets(enrichedTickets)
+      } catch (error) {
+        console.error("Error loading tickets:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadTickets()
+  }, [user])
 
   const filteredTickets = tickets.filter((ticket) => {
     const statusMatch = statusFilter === "all" || ticket.status === statusFilter

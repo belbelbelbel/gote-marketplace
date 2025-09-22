@@ -6,72 +6,67 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { AlertCircle, CheckCircle, Clock, Filter, ArrowUp } from "lucide-react"
-import { useState } from "react"
-
-// Mock admin support tickets (escalated from vendors/AI)
-const mockAdminTickets = [
-  {
-    id: "TKT-A001",
-    customerId: "customer_123",
-    customerName: "John Doe",
-    vendorId: "vendor_456",
-    vendorName: "TechStore",
-    subject: "Refund dispute - Product not as described",
-    description: "Customer claims product doesn't match description, vendor refuses refund",
-    status: "open",
-    priority: "high",
-    escalatedFrom: "vendor",
-    escalationReason: "Vendor-customer dispute",
-    createdAt: new Date("2024-01-15"),
-    lastUpdate: new Date("2024-01-15"),
-    messages: [
-      {
-        senderId: "customer_123",
-        senderRole: "customer",
-        message:
-          "The vendor is refusing to refund my money even though the product doesn't have the advertised features.",
-        timestamp: new Date("2024-01-15T10:30:00"),
-      },
-      {
-        senderId: "vendor_456",
-        senderRole: "vendor",
-        message: "The product description is accurate. Customer is trying to return a used item.",
-        timestamp: new Date("2024-01-15T11:00:00"),
-      },
-    ],
-  },
-  {
-    id: "TKT-A002",
-    customerId: "customer_789",
-    customerName: "Sarah Wilson",
-    vendorId: "vendor_123",
-    vendorName: "FashionHub",
-    subject: "Payment processing error",
-    description: "Customer charged twice for same order, vendor can't resolve",
-    status: "in-progress",
-    priority: "urgent",
-    escalatedFrom: "ai",
-    escalationReason: "Technical payment issue beyond AI capability",
-    createdAt: new Date("2024-01-14"),
-    lastUpdate: new Date("2024-01-15"),
-    messages: [
-      {
-        senderId: "ai_system",
-        senderRole: "ai",
-        message: "I've detected a duplicate payment charge. This requires manual intervention from the admin team.",
-        timestamp: new Date("2024-01-14T16:20:00"),
-      },
-    ],
-  },
-]
+import { AlertCircle, CheckCircle, Clock, Filter, ArrowUp, Loader2 } from "lucide-react"
+import { useState, useEffect } from "react"
+import { useAuth } from "@/contexts/AuthContext"
+import type { SupportTicket } from "@/lib/firestore"
 
 export default function AdminSupportPage() {
-  const [tickets, setTickets] = useState(mockAdminTickets)
+  const { user } = useAuth()
+  const [tickets, setTickets] = useState<any[]>([])
   const [selectedTicket, setSelectedTicket] = useState<any>(null)
   const [replyMessage, setReplyMessage] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [priorityFilter, setPriorityFilter] = useState("all")
+  const [loading, setLoading] = useState(true)
+
+  // Load tickets from Firestore
+  useEffect(() => {
+    const loadTickets = async () => {
+      try {
+        const { getSupportTickets } = await import("@/lib/firestore")
+        const { getUserProfile } = await import("@/lib/auth")
+        const allTickets = await getSupportTickets()
+
+        // Enrich tickets with user names
+        const enrichedTickets = await Promise.all(
+          allTickets.map(async (ticket) => {
+            const typedTicket = ticket as SupportTicket
+            let customerName = "Unknown Customer"
+            let vendorName = "Unknown Vendor"
+
+            try {
+              if (typedTicket.customerId) {
+                const customerProfile = await getUserProfile(typedTicket.customerId)
+                customerName = customerProfile?.displayName || "Unknown Customer"
+              }
+              if (typedTicket.vendorId) {
+                const vendorProfile = await getUserProfile(typedTicket.vendorId)
+                vendorName = vendorProfile?.displayName || "Unknown Vendor"
+              }
+            } catch (error) {
+              console.error("Error fetching user profile:", error)
+            }
+
+            return {
+              ...typedTicket,
+              customerName,
+              vendorName,
+              escalatedFrom: typedTicket.vendorId ? "vendor" : "ai", // Simple logic for demo
+              escalationReason: typedTicket.vendorId ? "Vendor-customer dispute" : "AI unable to resolve",
+            }
+          })
+        )
+
+        setTickets(enrichedTickets)
+      } catch (error) {
+        console.error("Error loading tickets:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadTickets()
+  }, [])
 
   const filteredTickets = tickets.filter((ticket) => {
     const statusMatch = statusFilter === "all" || ticket.status === statusFilter
@@ -125,47 +120,72 @@ export default function AdminSupportPage() {
     )
   }
 
-  const handleReply = (ticketId: string) => {
-    if (!replyMessage.trim()) return
+  const handleReply = async (ticketId: string) => {
+    if (!replyMessage.trim() || !user) return
 
-    setTickets((prev) =>
-      prev.map((ticket) => {
-        if (ticket.id === ticketId) {
-          return {
-            ...ticket,
-            messages: [
-              ...ticket.messages,
-              {
-                senderId: "admin_current",
-                senderRole: "admin",
-                message: replyMessage,
-                timestamp: new Date(),
-              },
-            ],
-            lastUpdate: new Date(),
-            status: "in-progress",
-          }
-        }
-        return ticket
-      }),
-    )
+    try {
+      const { updateSupportTicket } = await import("@/lib/firestore")
+      const { Timestamp } = await import("firebase/firestore")
 
-    setReplyMessage("")
+      const newMessage = {
+        senderId: user.uid,
+        senderRole: "admin" as const,
+        message: replyMessage,
+        timestamp: Timestamp.now(),
+      }
+
+      // Update ticket in Firestore
+      const ticket = tickets.find(t => t.id === ticketId)
+      if (ticket) {
+        const updatedMessages = [...(ticket.messages || []), newMessage]
+        await updateSupportTicket(ticketId, {
+          messages: updatedMessages,
+          status: "in-progress",
+        })
+
+        // Update local state
+        setTickets((prev) =>
+          prev.map((t) => {
+            if (t.id === ticketId) {
+              return {
+                ...t,
+                messages: updatedMessages,
+                status: "in-progress",
+                updatedAt: Timestamp.now(),
+              }
+            }
+            return t
+          }),
+        )
+      }
+
+      setReplyMessage("")
+    } catch (error) {
+      console.error("Error sending reply:", error)
+    }
   }
 
-  const handleStatusChange = (ticketId: string, newStatus: string) => {
-    setTickets((prev) =>
-      prev.map((ticket) => {
-        if (ticket.id === ticketId) {
-          return {
-            ...ticket,
-            status: newStatus,
-            lastUpdate: new Date(),
+  const handleStatusChange = async (ticketId: string, newStatus: string) => {
+    try {
+      const { updateSupportTicket } = await import("@/lib/firestore")
+
+      await updateSupportTicket(ticketId, { status: newStatus as "open" | "in-progress" | "resolved" | "closed" })
+
+      // Update local state
+      setTickets((prev) =>
+        prev.map((ticket) => {
+          if (ticket.id === ticketId) {
+            return {
+              ...ticket,
+              status: newStatus,
+            }
           }
-        }
-        return ticket
-      }),
-    )
+          return ticket
+        }),
+      )
+    } catch (error) {
+      console.error("Error updating status:", error)
+    }
   }
 
   return (
@@ -230,15 +250,23 @@ export default function AdminSupportPage() {
             <div className="grid gap-6 md:grid-cols-2">
               {/* Tickets List */}
               <div className="space-y-4">
-                <h2 className="text-xl font-semibold">Escalated Tickets ({filteredTickets.length})</h2>
-                {filteredTickets.map((ticket) => (
-                  <Card
-                    key={ticket.id}
-                    className={`cursor-pointer transition-colors hover:bg-muted/50 ${
-                      selectedTicket?.id === ticket.id ? "ring-2 ring-primary" : ""
-                    }`}
-                    onClick={() => setSelectedTicket(ticket)}
-                  >
+                <h2 className="text-xl font-semibold">Support Tickets ({filteredTickets.length})</h2>
+                {loading ? (
+                  <div className="text-center py-8">
+                    <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+                    <p>Loading tickets...</p>
+                  </div>
+                ) : filteredTickets.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">No tickets found.</p>
+                ) : (
+                  filteredTickets.map((ticket) => (
+                    <Card
+                      key={ticket.id}
+                      className={`cursor-pointer transition-colors hover:bg-muted/50 ${
+                        selectedTicket?.id === ticket.id ? "ring-2 ring-primary" : ""
+                      }`}
+                      onClick={() => setSelectedTicket(ticket)}
+                    >
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
@@ -263,12 +291,13 @@ export default function AdminSupportPage() {
                         <p className="text-sm text-muted-foreground line-clamp-2">{ticket.description}</p>
                         <p className="text-xs text-muted-foreground">Escalation reason: {ticket.escalationReason}</p>
                         <div className="text-xs text-muted-foreground">
-                          Last updated: {ticket.lastUpdate.toLocaleDateString()}
+                          Last updated: {ticket.updatedAt?.toDate?.()?.toLocaleDateString() || 'Unknown'}
                         </div>
                       </div>
                     </CardContent>
-                  </Card>
-                ))}
+                    </Card>
+                  ))
+                )}
               </div>
 
               {/* Ticket Details */}
@@ -314,7 +343,7 @@ export default function AdminSupportPage() {
                             <div className="text-sm text-muted-foreground space-y-1">
                               <p>Customer: {selectedTicket.customerName}</p>
                               <p>Vendor: {selectedTicket.vendorName}</p>
-                              <p>Created: {selectedTicket.createdAt.toLocaleDateString()}</p>
+                              <p>Created: {selectedTicket.createdAt?.toDate?.()?.toLocaleDateString() || 'Unknown'}</p>
                             </div>
                           </div>
 
@@ -358,7 +387,9 @@ export default function AdminSupportPage() {
                                   <span className="text-xs font-medium capitalize">{message.senderRole}</span>
                                 </div>
                                 <p className="text-sm">{message.message}</p>
-                                <p className="text-xs opacity-70 mt-1">{message.timestamp.toLocaleString()}</p>
+                                <p className="text-xs opacity-70 mt-1">
+                                  {message.timestamp?.toDate?.()?.toLocaleString() || message.timestamp?.toLocaleString() || 'Unknown'}
+                                </p>
                               </div>
                             </div>
                           ))}

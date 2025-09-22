@@ -5,14 +5,40 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { ShoppingCart, Plus, Minus, Trash2, ArrowLeft } from "lucide-react"
+import { ShoppingCart, Plus, Minus, Trash2, ArrowLeft, Loader2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import { useState, useEffect } from "react"
 
 export default function CartPage() {
   const { items, totalItems, totalPrice, updateQuantity, removeItem } = useCart()
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Cart should be loaded by now, but give it a moment
+    const timer = setTimeout(() => setIsLoading(false), 1000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 container mx-auto px-4 py-16">
+          <div className="max-w-2xl mx-auto text-center">
+            <Loader2 className="h-24 w-24 text-muted-foreground mx-auto mb-6 animate-spin" />
+            <h1 className="text-3xl font-bold mb-4">Loading your cart...</h1>
+            <p className="text-muted-foreground mb-8">
+              Please wait while we load your shopping cart.
+            </p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
 
   if (items.length === 0) {
     return (
@@ -65,7 +91,7 @@ export default function CartPage() {
                       <div className="flex-1 space-y-2">
                         <h3 className="text-lg font-semibold">{item.title}</h3>
                         <p className="text-sm text-muted-foreground">Sold by {item.vendorName}</p>
-                        <p className="text-lg font-bold text-accent">${item.price.toFixed(2)}</p>
+                        <p className="text-lg font-bold text-accent">₦{item.price.toFixed(2)}</p>
                         {item.quantity >= item.maxStock && (
                           <p className="text-xs text-destructive">Maximum quantity reached</p>
                         )}
@@ -122,7 +148,7 @@ export default function CartPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span>Subtotal ({totalItems} items)</span>
-                      <span>${totalPrice.toFixed(2)}</span>
+                      <span>₦{totalPrice.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Shipping</span>
@@ -130,13 +156,13 @@ export default function CartPage() {
                     </div>
                     <div className="flex justify-between">
                       <span>Tax</span>
-                      <span>${(totalPrice * 0.08).toFixed(2)}</span>
+                      <span>₦{(totalPrice * 0.08).toFixed(2)}</span>
                     </div>
                   </div>
                   <Separator />
                   <div className="flex justify-between text-lg font-semibold">
                     <span>Total</span>
-                    <span>${(totalPrice * 1.08).toFixed(2)}</span>
+                    <span>₦{(totalPrice * 1.08).toFixed(2)}</span>
                   </div>
                   <Button asChild className="w-full" size="lg">
                     <Link href="/checkout">Proceed to Checkout</Link>

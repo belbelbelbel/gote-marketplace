@@ -47,35 +47,84 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const { getUserCart, setUserCart } = require("@/lib/firestore")
 
-  // Load cart from Firestore on mount or user change
+  // Load cart from localStorage or Firestore
   useEffect(() => {
-    const fetchCart = async () => {
+    const loadCart = async () => {
       if (user) {
+        // User logged in: load from Firestore, merge with localStorage if exists
         try {
           const cart = await getUserCart(user.uid)
+          let firestoreItems: CartItem[] = []
           if (cart && Array.isArray(cart.items)) {
-            setItems(cart.items)
-          } else {
-            setItems([])
+            firestoreItems = cart.items
           }
+
+          // Check localStorage for anonymous cart
+          const localCart = localStorage.getItem('anonymous_cart')
+          let localItems: CartItem[] = []
+          if (localCart) {
+            try {
+              localItems = JSON.parse(localCart)
+            } catch (e) {
+              console.error("Error parsing local cart:", e)
+            }
+          }
+
+          // Merge: prefer Firestore, but add any unique items from local
+          const mergedItems = [...firestoreItems]
+          localItems.forEach(localItem => {
+            const existing = mergedItems.find(item => item.productId === localItem.productId)
+            if (!existing) {
+              mergedItems.push(localItem)
+            }
+          })
+
+          setItems(mergedItems)
+
+          // Save merged cart to Firestore and clear localStorage
+          if (mergedItems.length > 0) {
+            await setUserCart(user.uid, mergedItems)
+          }
+          localStorage.removeItem('anonymous_cart')
         } catch (error) {
           console.error("Error loading cart from Firestore:", error)
+          setItems([])
         }
       } else {
-        setItems([])
+        // No user: load from localStorage
+        const localCart = localStorage.getItem('anonymous_cart')
+        if (localCart) {
+          try {
+            const localItems = JSON.parse(localCart)
+            setItems(localItems)
+          } catch (e) {
+            console.error("Error parsing local cart:", e)
+            setItems([])
+          }
+        } else {
+          setItems([])
+        }
       }
     }
-    fetchCart()
+    loadCart()
   }, [user])
 
-  // Save cart to Firestore whenever items change
+  // Save cart whenever items change
   useEffect(() => {
     const saveCart = async () => {
       if (user) {
+        // Save to Firestore
         try {
           await setUserCart(user.uid, items)
         } catch (error) {
           console.error("Error saving cart to Firestore:", error)
+        }
+      } else {
+        // Save to localStorage
+        try {
+          localStorage.setItem('anonymous_cart', JSON.stringify(items))
+        } catch (error) {
+          console.error("Error saving cart to localStorage:", error)
         }
       }
     }

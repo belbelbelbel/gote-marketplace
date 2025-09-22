@@ -165,7 +165,7 @@ export default function FeaturedProducts() {
                 />
                 {product.originalPrice > product.price && (
                   <Badge className="absolute top-3 left-3 bg-accent text-accent-foreground">
-                    Save ${(product.originalPrice - product.price).toFixed(2)}
+                    Save ₦{(product.originalPrice - product.price).toFixed(2)}
                   </Badge>
                 )}
               </div>
@@ -184,9 +184,9 @@ export default function FeaturedProducts() {
 
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl font-bold">${product.price}</span>
+                    <span className="text-2xl font-bold">₦{product.price}</span>
                     {product.originalPrice > product.price && (
-                      <span className="text-sm text-muted-foreground line-through">${product.originalPrice}</span>
+                      <span className="text-sm text-muted-foreground line-through">₦{product.originalPrice}</span>
                     )}
                   </div>
                 </div>

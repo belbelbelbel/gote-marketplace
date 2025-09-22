@@ -52,7 +52,7 @@ export default function CartSidebar() {
                     <div className="flex-1 space-y-1">
                       <h4 className="text-sm font-medium line-clamp-2">{item.title}</h4>
                       <p className="text-xs text-muted-foreground">by {item.vendorName}</p>
-                      <p className="text-sm font-semibold">${item.price.toFixed(2)}</p>
+                      <p className="text-sm font-semibold">₦{item.price.toFixed(2)}</p>
                     </div>
                     <div className="flex flex-col items-end space-y-2">
                       <div className="flex items-center space-x-2">
@@ -92,7 +92,7 @@ export default function CartSidebar() {
             <div className="space-y-4 pt-4 border-t">
               <div className="flex items-center justify-between text-lg font-semibold">
                 <span>Total</span>
-                <span>${totalPrice.toFixed(2)}</span>
+                <span>₦{totalPrice.toFixed(2)}</span>
               </div>
               <div className="space-y-2">
                 <Button asChild className="w-full" onClick={() => setIsOpen(false)}>

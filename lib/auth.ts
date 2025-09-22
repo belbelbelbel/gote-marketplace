@@ -18,7 +18,7 @@ export const signUp = async (
   email: string,
   password: string,
   displayName: string,
-  role: "customer" | "vendor" = "customer",
+  role: "customer" | "vendor" | "admin" = "customer",
 ) => {
   const authInstance = getAuthInstance()
   const db = getDbInstance()

@@ -15,7 +15,7 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  const { user, logout } = useAuth()
+  const { user, userProfile, logout } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
@@ -24,8 +24,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       return
     }
 
-    // Check if user is admin (in real app, check user role from database)
-    const isAdmin = user.email === "admin@gote.com" // Mock admin check
+    // Check if user is admin (check user role from database)
+    const isAdmin = userProfile?.role === "admin"
     if (!isAdmin) {
       router.push("/unauthorized")
       return

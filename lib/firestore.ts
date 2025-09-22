@@ -30,6 +30,139 @@ export const getOrders = async (filters?: {
     throw error
   }
 }
+
+export const createOrder = async (orderData: Omit<Order, "id" | "createdAt" | "updatedAt">) => {
+  try {
+    const db = getDbInstance()
+    const docRef = await addDoc(collection(db, "orders"), {
+      ...orderData,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    })
+    return docRef.id
+  } catch (error) {
+    console.error("Error creating order:", error)
+    throw error
+  }
+}
+
+export const updateOrder = async (orderId: string, orderData: Partial<Order>) => {
+  try {
+    const db = getDbInstance()
+    const docRef = doc(db, "orders", orderId)
+    await updateDoc(docRef, {
+      ...orderData,
+      updatedAt: Timestamp.now(),
+    })
+  } catch (error) {
+    console.error("Error updating order:", error)
+    throw error
+  }
+}
+
+export const createNotification = async (notificationData: Omit<Notification, "id" | "createdAt">) => {
+  try {
+    const db = getDbInstance()
+    const docRef = await addDoc(collection(db, "notifications"), {
+      ...notificationData,
+      createdAt: Timestamp.now(),
+    })
+    return docRef.id
+  } catch (error) {
+    console.error("Error creating notification:", error)
+    throw error
+  }
+}
+
+export const getNotifications = async (userId: string, limitCount?: number) => {
+  try {
+    const db = getDbInstance()
+    let q = query(
+      collection(db, "notifications"),
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc")
+    )
+    if (limitCount) {
+      q = query(q, limit(limitCount))
+    }
+    const snapshot = await getDocs(q)
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+  } catch (error) {
+    console.error("Error getting notifications:", error)
+    throw error
+  }
+}
+
+export const markNotificationAsRead = async (notificationId: string) => {
+  try {
+    const db = getDbInstance()
+    const docRef = doc(db, "notifications", notificationId)
+    await updateDoc(docRef, { read: true })
+  } catch (error) {
+    console.error("Error marking notification as read:", error)
+    throw error
+  }
+}
+
+export const createSupportTicket = async (ticketData: Omit<SupportTicket, "id" | "createdAt" | "updatedAt">) => {
+  try {
+    const db = getDbInstance()
+    const docRef = await addDoc(collection(db, "supportTickets"), {
+      ...ticketData,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    })
+    return docRef.id
+  } catch (error) {
+    console.error("Error creating support ticket:", error)
+    throw error
+  }
+}
+
+export const getSupportTickets = async (filters?: {
+  customerId?: string
+  vendorId?: string
+  status?: string
+  limitCount?: number
+}) => {
+  try {
+    const db = getDbInstance()
+    let q = query(collection(db, "supportTickets"), orderBy("createdAt", "desc"))
+
+    if (filters?.customerId) {
+      q = query(q, where("customerId", "==", filters.customerId))
+    }
+    if (filters?.vendorId) {
+      q = query(q, where("vendorId", "==", filters.vendorId))
+    }
+    if (filters?.status) {
+      q = query(q, where("status", "==", filters.status))
+    }
+    if (filters?.limitCount) {
+      q = query(q, limit(filters.limitCount))
+    }
+
+    const snapshot = await getDocs(q)
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+  } catch (error) {
+    console.error("Error getting support tickets:", error)
+    throw error
+  }
+}
+
+export const updateSupportTicket = async (ticketId: string, ticketData: Partial<SupportTicket>) => {
+  try {
+    const db = getDbInstance()
+    const docRef = doc(db, "supportTickets", ticketId)
+    await updateDoc(docRef, {
+      ...ticketData,
+      updatedAt: Timestamp.now(),
+    })
+  } catch (error) {
+    console.error("Error updating support ticket:", error)
+    throw error
+  }
+}
 import { getDbInstance } from "./firebase"
 import {
   collection,
@@ -108,14 +241,24 @@ export interface SupportTicket {
   createdAt: Timestamp
   updatedAt: Timestamp
 }
-  // Cart interface
+
+// Notification interface
+export interface Notification {
+  id?: string
+  userId: string
+  type: "order" | "ticket" | "system"
+  title: string
+  message: string
+  read: boolean
+  relatedId?: string // orderId or ticketId
+  createdAt: Timestamp
+}
   export interface UserCart {
     userId: string
     items: any[]
     updatedAt: Timestamp
   }
 
-  // Cart CRUD operations
   export const getUserCart = async (userId: string): Promise<UserCart | null> => {
     try {
       const db = getDbInstance()

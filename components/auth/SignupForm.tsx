@@ -24,7 +24,7 @@ export default function SignupForm() {
     password: "",
     confirmPassword: "",
     displayName: "",
-    role: (isVendorSignup ? "vendor" : "customer") as "customer" | "vendor",
+    role: (isVendorSignup ? "vendor" : "customer") as "customer" | "vendor" | "admin",
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -66,6 +66,8 @@ export default function SignupForm() {
 
       if (formData.role === "vendor") {
         router.push("/vendor/dashboard")
+      } else if (formData.role === "admin") {
+        router.push("/admin/dashboard")
       } else {
         router.push("/")
       }
@@ -125,7 +127,7 @@ export default function SignupForm() {
               <Label htmlFor="role">Account Type</Label>
               <Select
                 value={formData.role}
-                onValueChange={(value: "customer" | "vendor") => handleInputChange("role", value)}
+                onValueChange={(value: "customer" | "vendor" | "admin") => handleInputChange("role", value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select account type" />
@@ -133,6 +135,9 @@ export default function SignupForm() {
                 <SelectContent>
                   <SelectItem value="customer">Customer - Buy products</SelectItem>
                   <SelectItem value="vendor">Vendor - Sell products</SelectItem>
+                  {formData.email === "admin@gote.com" && (
+                    <SelectItem value="admin">Admin - Platform management</SelectItem>
+                  )}
                 </SelectContent>
               </Select>
             </div>

@@ -86,26 +86,55 @@ export default function CheckoutPage() {
         }
       }
 
-      // Create order
-      const orderData = {
-        customerId: user?.uid,
-        items: items.map((item) => ({
-          productId: item.productId,
-          vendorId: item.vendorId,
-          quantity: item.quantity,
-          price: item.price,
-          title: item.title,
-        })),
-        shippingAddress: shippingInfo,
-        paymentMethod,
-        subtotal,
-        tax,
-        shipping,
-        total,
-        status: "pending",
-      }
+      // Import functions dynamically
+      const { createOrder, createNotification } = await import("@/lib/firestore")
 
-      console.log("Creating order:", orderData)
+      // Group items by vendor
+      const vendorOrders = items.reduce((acc, item) => {
+        if (!acc[item.vendorId]) {
+          acc[item.vendorId] = []
+        }
+        acc[item.vendorId].push(item)
+        return acc
+      }, {} as Record<string, typeof items>)
+
+      // Create orders for each vendor
+      const orderIds: string[] = []
+      for (const [vendorId, vendorItems] of Object.entries(vendorOrders)) {
+        const vendorTotal = vendorItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+        const orderData = {
+          customerId: user?.uid!,
+          vendorId,
+          products: vendorItems.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+          totalAmount: vendorTotal,
+          status: "pending" as const,
+          shippingAddress: {
+            street: shippingInfo.address,
+            city: shippingInfo.city,
+            state: shippingInfo.state,
+            zipCode: shippingInfo.zipCode,
+            country: shippingInfo.country,
+          },
+        }
+
+        const orderId = await createOrder(orderData)
+        orderIds.push(orderId)
+        console.log(`Order created for vendor ${vendorId} with ID:`, orderId)
+
+        // Notify seller
+        await createNotification({
+          userId: vendorId,
+          type: "order",
+          title: "New Order Received",
+          message: `You have received a new order for $${vendorTotal.toFixed(2)}. Order ID: ${orderId}`,
+          read: false,
+          relatedId: orderId,
+        })
+      }
 
       // Simulate payment processing
       await new Promise((resolve) => setTimeout(resolve, 2000))
