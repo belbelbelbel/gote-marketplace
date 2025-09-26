@@ -131,7 +131,7 @@ export default function AddProductModal({ children }: AddProductModalProps) {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add New Product</DialogTitle>
         </DialogHeader>
@@ -179,8 +179,6 @@ export default function AddProductModal({ children }: AddProductModalProps) {
               )}
             </div>
           </div>
-
-          {/* Basic Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="title">Product Title *</Label>
@@ -192,7 +190,6 @@ export default function AddProductModal({ children }: AddProductModalProps) {
                 required
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="category">Category *</Label>
               <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>

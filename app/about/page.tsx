@@ -23,7 +23,7 @@ export default function AboutPage() {
               </p>
             </div>
             <div className="bg-muted rounded-lg p-8">
-              <img src="/modern-office-collaboration.png" alt="GOTE team" className="w-full h-64 object-cover rounded-lg" />
+              <img src="/heroimg8.jpg" alt="GOTE team" className="w-full h-64 object-cover rounded-lg" />
             </div>
           </div>
 

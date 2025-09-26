@@ -53,7 +53,17 @@ export default function CategoryPage() {
   }, [categorySlug]);
 
   useEffect(() => {
-    let filtered = products.filter((product) => (product.vendorCategory || product.category) === categorySlug)
+    // More flexible category matching - check multiple possible category formats
+    let filtered = products.filter((product) => {
+      const productCategory = (product.vendorCategory || product.category || "").toLowerCase()
+      const categoryDisplayName = categoryNames[categorySlug]?.toLowerCase()
+      
+      return productCategory === categorySlug ||
+             productCategory === categoryDisplayName ||
+             productCategory.includes(categorySlug) ||
+             (categoryDisplayName && productCategory.includes(categoryDisplayName))
+    })
+    
     // If no products in this category, show fallback and suggestions
     if (filtered.length === 0) {
       setFilteredProducts([])

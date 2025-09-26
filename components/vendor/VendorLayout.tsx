@@ -85,12 +85,11 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
             )
           })}
         </nav>
-
-        {/* View Store Button */}
-        <div className="border-t p-4">
+        
+        <div className="border-t p-4" onClick={() => routes.push('/')}>
           <Button variant="outline" className="w-full">
             <Store className="mr-2 h-4 w-4" />
-            View Store
+              Back To home
           </Button>
         </div>
       </div>
@@ -117,7 +116,7 @@ export default function VendorLayout({ children }: VendorLayoutProps) {
             </AddProductModal>
             <Button variant="outline" onClick={() => routes.push('/')}>
               <Store className="mr-2 h-4 w-4" />
-              View Store
+              Back To home
             </Button>
           </div>
         </header>
