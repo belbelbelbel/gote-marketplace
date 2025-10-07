@@ -10,7 +10,7 @@ export default function HeroSection() {
   const { userProfile } = useAuth()
   
   return (
-    <section className="relative min-h-[100vh] sm:min-h-[90vh] md:min-h-[90vh] lg:min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[100vh] sm:min-h-[90vh] md:min-h-[90vh]  flex items-center justify-center overflow-hidden">
       {/* Background with enhanced gradient overlay */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -31,10 +31,10 @@ export default function HeroSection() {
         <div className="max-w-7xl mx-auto text-center">
           {/* Main headline with enhanced typography */}
           <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 sm:mb-6 md:mb-8">
-            <span className="bg-gradient-to-r from-white via-white to-gray-300 bg-clip-text text-transparent block">
+            <span className="text-white">
               Discover Amazing
             </span>
-            <span className="bg-gradient-to-r from-accent via-accent-foreground to-accent bg-clip-text text-transparent block mt-2">
+            <span className=" text-white block mt-0">
               Products
             </span>
           </h1>
@@ -87,7 +87,7 @@ export default function HeroSection() {
             </div>
             <div className="text-center p-3 sm:p-4 md:p-6 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 col-span-1">
               <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 text-accent mx-auto mb-2 sm:mb-3" />
-              <h3 className="text-white font-semibold mb-1 sm:mb-2 text-xs sm:text-sm md:text-base">AI Support</h3>
+              <h3 className="text-white font-semibold mb-1 sm:mb-2 text-xs sm:text-sm md:text-base">Customer Service</h3>
               <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">24/7 intelligent customer assistance</p>
             </div>
           </div>

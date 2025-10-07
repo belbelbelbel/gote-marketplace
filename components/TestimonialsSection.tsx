@@ -71,7 +71,7 @@ export default function TestimonialsSection() {
           {testimonials.map((testimonial) => (
             <Card
               key={testimonial.id}
-              className="hover:shadow-lg transition-shadow duration-300 h-full"
+              className="hover:shadow transition-shadow duration-300 h-full"
             >
               <CardContent className="p-4 sm:p-6 lg:p-8 h-full flex flex-col">
                 {/* Rating stars */}
@@ -110,21 +110,6 @@ export default function TestimonialsSection() {
               </CardContent>
             </Card>
           ))}
-        </div>
-
-        {/* Bottom section */}
-        <div className="text-center mt-8 sm:mt-12 lg:mt-16">
-          <div className="inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-4 sm:p-6 rounded-xl bg-white border border-gray-200 shadow-sm">
-            <div className="flex items-center mb-2 sm:mb-0">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />
-              ))}
-            </div>
-            <div className="text-center sm:text-left">
-              <div className="text-xl sm:text-2xl font-bold text-gray-900">4.9/5</div>
-              <div className="text-xs sm:text-sm text-gray-600">from 10,000+ reviews</div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
