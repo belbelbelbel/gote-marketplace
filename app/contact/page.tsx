@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Mail, Phone, MapPin, Clock } from "lucide-react"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -39,8 +41,9 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-16">
+    <div className="min-h-screen bg-background flex flex-col">
+      <Header/>
+      <div className="container mx-auto px-4 py-16 flex-1">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
@@ -142,7 +145,7 @@ export default function ContactPage() {
                 <CardContent className="space-y-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-3 rounded-lg">
-                      <Mail className="w-6 h-6 text-primary" />
+                      <Mail className="w-6 h-6 text-black" />
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">Email</h3>
@@ -153,34 +156,34 @@ export default function ContactPage() {
 
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-3 rounded-lg">
-                      <Phone className="w-6 h-6 text-primary" />
+                      <Phone className="w-6 h-6 text-black" />
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">Phone</h3>
-                      <p className="text-muted-foreground">+1 (555) 123-4567</p>
-                      <p className="text-muted-foreground">+1 (555) 987-6543</p>
+                      <p className="text-muted-foreground">+234 812 9380 869</p>
+                      <p className="text-muted-foreground">+234 813 5672 143</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-3 rounded-lg">
-                      <MapPin className="w-6 h-6 text-primary" />
+                      <MapPin className="w-6 h-6 text-black" />
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">Address</h3>
                       <p className="text-muted-foreground">
-                        123 Commerce Street
+                        123 Allen Avenue
                         <br />
-                        Business District
+                        Ikeja Business District
                         <br />
-                        New York, NY 10001
+                        Lagos, Nigeria 100001
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-3 rounded-lg">
-                      <Clock className="w-6 h-6 text-primary" />
+                      <Clock className="w-6 h-6 text-black" />
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">Business Hours</h3>
@@ -229,6 +232,7 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

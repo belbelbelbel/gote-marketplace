@@ -165,7 +165,7 @@ export default function VendorAnalyticsPage() {
                         <p className="text-sm text-gray-600">{product.sales || 0} sold</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium">${product.price}</p>
+                        <p className="font-medium">₦{product.price}</p>
                         <Badge variant="secondary">{product.category}</Badge>
                       </div>
                     </div>

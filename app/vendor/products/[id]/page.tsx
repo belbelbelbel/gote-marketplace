@@ -60,7 +60,7 @@ export default function ProductViewPage() {
               </div>
               <div className="flex-1 space-y-2">
                 <div><b>Category:</b> {product.category}</div>
-                <div><b>Price:</b> ${product.price}</div>
+                <div><b>Price:</b> ₦{product.price}</div>
                 <div><b>Stock:</b> {product.stock}</div>
                 <div><b>SKU:</b> {product.sku}</div>
                 <div><b>Description:</b> {product.description}</div>

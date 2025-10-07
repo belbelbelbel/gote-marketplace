@@ -32,7 +32,7 @@ export default function ShippingPage() {
                 <h3 className="font-semibold mb-2">Express Shipping</h3>
                 <p className="text-2xl font-bold text-primary mb-2">1-2 Days</p>
                 <p className="text-sm text-muted-foreground mb-3">Get your order fast</p>
-                <Badge variant="secondary">$9.99</Badge>
+                <Badge variant="secondary">₦5,000</Badge>
               </CardContent>
             </Card>
             
@@ -42,7 +42,7 @@ export default function ShippingPage() {
                 <h3 className="font-semibold mb-2">Standard Shipping</h3>
                 <p className="text-2xl font-bold text-blue-500 mb-2">3-5 Days</p>
                 <p className="text-sm text-muted-foreground mb-3">Most popular option</p>
-                <Badge variant="secondary">$4.99</Badge>
+                <Badge variant="secondary">₦2,500</Badge>
               </CardContent>
             </Card>
             
@@ -52,7 +52,7 @@ export default function ShippingPage() {
                 <h3 className="font-semibold mb-2">Economy Shipping</h3>
                 <p className="text-2xl font-bold text-green-500 mb-2">5-7 Days</p>
                 <p className="text-sm text-muted-foreground mb-3">Budget-friendly</p>
-                <Badge variant="secondary">Free over $25</Badge>
+                <Badge variant="secondary">Free over ₦25</Badge>
               </CardContent>
             </Card>
           </div>
@@ -69,28 +69,28 @@ export default function ShippingPage() {
               <CardContent>
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-semibold mb-3">Domestic Shipping (US)</h4>
+                    <h4 className="font-semibold mb-3">Domestic Shipping (Nigeria)</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                         <div>
                           <span className="font-medium">Express (1-2 days)</span>
                           <p className="text-sm text-muted-foreground">Next business day delivery</p>
                         </div>
-                        <Badge variant="outline">$9.99</Badge>
+                        <Badge variant="outline">₦5,000</Badge>
                       </div>
                       <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                         <div>
                           <span className="font-medium">Standard (3-5 days)</span>
                           <p className="text-sm text-muted-foreground">Business days delivery</p>
                         </div>
-                        <Badge variant="outline">$4.99</Badge>
+                        <Badge variant="outline">₦2,500</Badge>
                       </div>
                       <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                         <div>
                           <span className="font-medium">Economy (5-7 days)</span>
-                          <p className="text-sm text-muted-foreground">Free over $25</p>
+                          <p className="text-sm text-muted-foreground">Free over ₦15,000</p>
                         </div>
-                        <Badge variant="outline">$1.99</Badge>
+                        <Badge variant="outline">₦1,000</Badge>
                       </div>
                     </div>
                   </div>
@@ -100,17 +100,17 @@ export default function ShippingPage() {
                     <div className="space-y-2">
                       <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                         <div>
-                          <span className="font-medium">Canada & Mexico</span>
+                          <span className="font-medium">West Africa</span>
                           <p className="text-sm text-muted-foreground">7-14 business days</p>
                         </div>
-                        <Badge variant="outline">$19.99</Badge>
+                        <Badge variant="outline">₦12,000</Badge>
                       </div>
                       <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                         <div>
                           <span className="font-medium">International</span>
                           <p className="text-sm text-muted-foreground">14-21 business days</p>
                         </div>
-                        <Badge variant="outline">$29.99</Badge>
+                        <Badge variant="outline">₦18,000</Badge>
                       </div>
                     </div>
                   </div>
@@ -140,7 +140,7 @@ export default function ShippingPage() {
                   <div>
                     <h4 className="font-semibold mb-2">Delivery Options</h4>
                     <ul className="space-y-1 text-sm text-muted-foreground">
-                      <li>• Signature required for orders over $100</li>
+                      <li>• Signature required for orders over ₦50,000</li>
                       <li>• P.O. Box delivery available</li>
                       <li>• Hold for pickup at carrier locations</li>
                     </ul>
@@ -164,9 +164,9 @@ export default function ShippingPage() {
             <CardContent className="p-8">
               <div className="text-center">
                 <Package className="w-16 h-16 text-green-600 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold mb-2">Free Shipping on Orders $25+</h3>
+                <h3 className="text-2xl font-bold mb-2">Free Shipping on Orders ₦15,000+</h3>
                 <p className="text-muted-foreground mb-4">
-                  Get free economy shipping on all domestic orders over $25. No code needed!
+                  Get free economy shipping on all domestic orders over ₦15,000. No code needed!
                 </p>
                 <div className="flex justify-center space-x-4 text-sm">
                   <div className="flex items-center text-green-600">

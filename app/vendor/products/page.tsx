@@ -156,7 +156,7 @@ const VendorProductsPage = () => {
                         </div>
                       </TableCell>
                       <TableCell className="font-mono text-sm">{product.sku}</TableCell>
-                      <TableCell className="font-medium">${product.price}</TableCell>
+                      <TableCell className="font-medium">₦{product.price}</TableCell>
                       <TableCell>{product.stock}</TableCell>
                       <TableCell>{getStatusBadge(product.status, product.stock)}</TableCell>
                       <TableCell>{product.sales} sold</TableCell>

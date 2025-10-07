@@ -11,6 +11,7 @@ import { Search, Filter, Grid, List, Heart, ShoppingCart } from "lucide-react"
 import { useCart } from "@/contexts/CartContext"
 import Link from "next/link"
 import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 
 import { getProducts } from "@/lib/firestore"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -124,9 +125,9 @@ export default function ShopPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-          <Header/>
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-background flex flex-col">
+      <Header/>
+      <div className="container mx-auto px-4 py-8 flex-1">
      
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-4">Shop All Products</h1>
@@ -321,10 +322,10 @@ export default function ShopPage() {
                             </div>
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <span className="text-lg font-bold">${product.price}</span>
+                                <span className="text-lg font-bold">₦{product.price}</span>
                                 {product.originalPrice && (
                                   <span className="text-sm text-muted-foreground line-through">
-                                    ${product.originalPrice}
+                                    ₦{product.originalPrice}
                                   </span>
                                 )}
                               </div>
@@ -353,10 +354,10 @@ export default function ShopPage() {
                             <p className="text-sm text-muted-foreground">{product.description}</p>
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <span className="text-lg font-bold">${product.price}</span>
+                                <span className="text-lg font-bold">₦{product.price}</span>
                                 {product.originalPrice && (
                                   <span className="text-sm text-muted-foreground line-through">
-                                    ${product.originalPrice}
+                                    ₦{product.originalPrice}
                                   </span>
                                 )}
                               </div>
@@ -376,6 +377,7 @@ export default function ShopPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

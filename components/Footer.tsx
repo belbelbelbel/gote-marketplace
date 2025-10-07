@@ -8,23 +8,23 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {/* Company Info */}
           <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-background">
-                <span className="text-lg font-bold">G</span>
-              </div>
-              <span className="font-bold text-xl">GOTE</span>
+             <Link href="/" className="flex items-center space-x-2 pb-4 sm:space-x-3 group shrink-0">
+            <div className="flex h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 items-center justify-center rounded-lg sm:rounded-xl bg-black  text-white shadow-lg  transition-all duration-300">
+              <span className="text-base sm:text-lg lg:text-xl font-bold">G</span>
             </div>
+            <span className="hidden text-black font-bold text-lg sm:text-xl lg:inline-block  transition-colors duration-200">GOTE</span>
+          </Link>
             <p className="text-muted-foreground mb-4 text-pretty">
               Your trusted marketplace with AI-powered customer service. Connecting buyers and sellers with confidence.
             </p>
             <div className="flex space-x-4">
-              <Link href="#" className="text-muted-foreground hover:text-accent transition-colors">
+              <Link href="/contact" className="text-muted-foreground hover:text-accent transition-colors">
                 <Facebook className="h-5 w-5" />
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-accent transition-colors">
+              <Link href="/contact" className="text-muted-foreground hover:text-accent transition-colors">
                 <Twitter className="h-5 w-5" />
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-accent transition-colors">
+              <Link href="/contact" className="text-muted-foreground hover:text-accent transition-colors">
                 <Instagram className="h-5 w-5" />
               </Link>
             </div>
@@ -94,11 +94,11 @@ export default function Footer() {
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">+234 81293 80869</span>
+                <span className="text-muted-foreground">+234 812 9380 869</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">123 Commerce St, City, Anambra State</span>
+                <span className="text-muted-foreground">123 Allen Avenue, Ikeja, Lagos State, Nigeria</span>
               </div>
             </div>
           </div>

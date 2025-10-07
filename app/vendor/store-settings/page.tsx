@@ -119,7 +119,7 @@ export default function VendorStoreSettingsPage() {
                       id="contactPhone"
                       value={settings.contactPhone}
                       onChange={(e) => handleInputChange("contactPhone", e.target.value)}
-                      placeholder="+1 (555) 123-4567"
+                      placeholder="+234 812 938 0869"
                     />
                   </div>
                   <div className="space-y-2">
@@ -128,7 +128,7 @@ export default function VendorStoreSettingsPage() {
                       id="businessAddress"
                       value={settings.businessAddress}
                       onChange={(e) => handleInputChange("businessAddress", e.target.value)}
-                      placeholder="123 Main St, City, State"
+                      placeholder="123 Allen Avenue, Lagos, Nigeria"
                     />
                   </div>
                 </div>

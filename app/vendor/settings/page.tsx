@@ -108,7 +108,7 @@ export default function VendorSettingsPage() {
                     id="phone"
                     value={settings.phone}
                     onChange={(e) => handleInputChange("phone", e.target.value)}
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="+234 812 938 0869"
                   />
                 </div>
               </CardContent>

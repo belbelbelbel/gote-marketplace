@@ -335,8 +335,8 @@ export default function TermsPage() {
               </p>
               <div className="space-y-2 text-sm">
                 <p><strong>Email:</strong> legal@gote.com</p>
-                <p><strong>Address:</strong> 123 Commerce St, Legal Department, City, State 12345</p>
-                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                <p><strong>Address:</strong> 123 Allen Avenue, Legal Department, Lagos, Nigeria</p>
+                <p><strong>Phone:</strong> +234 812 9380 869</p>
               </div>
               <div className="mt-4">
                 <Link href="/support" className="inline-flex items-center text-primary hover:underline text-sm">

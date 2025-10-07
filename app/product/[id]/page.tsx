@@ -96,7 +96,7 @@ const ProductPage = () => {
                                     <span className="text-gray-500 text-sm">623 reviews</span>
                                     <span className="text-gray-500 text-sm ml-2">1,919 Sold</span>
                                 </div>
-                                <p className="text-3xl font-bold text-accent mt-4">${product.price}</p>
+                                <p className="text-3xl font-bold text-accent mt-4">₦{product.price}</p>
                             </div>
 
                             {/* Color */}
@@ -151,14 +151,14 @@ const ProductPage = () => {
                             <div className="bg-slate-50 rounded-xl p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                                 <div>
                                     <h3 className="font-semibold text-lg text-slate-900">Stylish <span className="text-blue-500">✔</span></h3>
-                                    <p className="text-xs text-gray-500">New York, USA</p>
+                                    <p className="text-xs text-gray-500">Lagos, Nigeria</p>
                                 </div>
                                 <div className="flex items-center gap-1 text-yellow-500">
                                     <span>★</span><span>4.8</span>
                                     <span className="text-gray-500 ml-1">17.5k reviews</span>
                                 </div>
                                 <Button variant="outline" size="sm">Visit Store</Button>
-                                <p className="text-xs text-gray-500">Estimated Shipping <b>$3.99</b></p>
+                                <p className="text-xs text-gray-500">Estimated Shipping <b>₦1,500</b></p>
                             </div>
 
                             {/* Add to Cart */}

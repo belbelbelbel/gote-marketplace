@@ -63,7 +63,7 @@ export default function VendorOrdersPage() {
                         <Package className="h-5 w-5 text-muted-foreground" />
                         <span className="font-medium">{prod.title || prod.productId}</span>
                         <span className="text-muted-foreground">x{prod.quantity}</span>
-                        <span className="text-muted-foreground">${prod.price}</span>
+                        <span className="text-muted-foreground">₦{prod.price}</span>
                       </div>
                     ))}
                   </div>

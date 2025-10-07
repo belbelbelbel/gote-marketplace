@@ -238,9 +238,9 @@ export default function CategoryPage() {
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span className="text-lg font-bold">${product.price}</span>
+                          <span className="text-lg font-bold">₦{product.price}</span>
                           {product.originalPrice && (
-                            <span className="text-sm text-muted-foreground line-through">${product.originalPrice}</span>
+                            <span className="text-sm text-muted-foreground line-through">₦{product.originalPrice}</span>
                           )}
                         </div>
                         <Button size="sm" onClick={() => handleAddToCart(product)} disabled={!product.inStock}>
@@ -308,9 +308,9 @@ export default function CategoryPage() {
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold">${product.price}</span>
+                        <span className="text-lg font-bold">₦{product.price}</span>
                         {product.originalPrice && (
-                          <span className="text-sm text-muted-foreground line-through">${product.originalPrice}</span>
+                          <span className="text-sm text-muted-foreground line-through">₦{product.originalPrice}</span>
                         )}
                       </div>
                       <Button size="sm" onClick={() => handleAddToCart(product)} disabled={!product.inStock}>

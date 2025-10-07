@@ -19,6 +19,7 @@ import { ArrowLeft, CreditCard, Truck, Shield, Loader2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 import ProtectedRoute from "@/components/auth/ProtectedRoute"
 
 export default function CheckoutPage() {
@@ -420,7 +421,7 @@ export default function CheckoutPage() {
                               <p className="text-sm font-medium line-clamp-1">{item.title}</p>
                               <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
                             </div>
-                            <p className="text-sm font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                            <p className="text-sm font-medium">₦{(item.price * item.quantity).toFixed(2)}</p>
                           </div>
                         ))}
                       </div>
@@ -430,7 +431,7 @@ export default function CheckoutPage() {
                       <div className="space-y-2">
                         <div className="flex justify-between">
                           <span>Subtotal</span>
-                          <span>${subtotal.toFixed(2)}</span>
+                          <span>₦{subtotal.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Shipping</span>
@@ -438,7 +439,7 @@ export default function CheckoutPage() {
                         </div>
                         <div className="flex justify-between">
                           <span>Tax</span>
-                          <span>${tax.toFixed(2)}</span>
+                          <span>₦{tax.toFixed(2)}</span>
                         </div>
                       </div>
 
@@ -446,13 +447,13 @@ export default function CheckoutPage() {
 
                       <div className="flex justify-between text-lg font-semibold">
                         <span>Total</span>
-                        <span>${total.toFixed(2)}</span>
+                        <span>₦{total.toFixed(2)}</span>
                       </div>
 
                       <div className="pt-4">
                         <Button type="submit" className="w-full" size="lg" disabled={loading}>
                           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                          {loading ? "Processing..." : `Place Order - $${total.toFixed(2)}`}
+                          {loading ? "Processing..." : `Place Order - ₦${total.toFixed(2)}`}
                         </Button>
                       </div>
 
@@ -467,6 +468,7 @@ export default function CheckoutPage() {
             </form>
           </div>
         </main>
+        <Footer />
       </div>
     </ProtectedRoute>
   )

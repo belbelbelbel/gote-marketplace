@@ -231,13 +231,13 @@ export default function DealsPage() {
                     {/* Price */}
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold">${product.price}</span>
+                        <span className="text-lg font-bold">₦{product.price}</span>
                         <span className="text-sm text-muted-foreground line-through">
-                          ${product.originalPrice?.toFixed(2)}
+                          ₦{product.originalPrice?.toFixed(2)}
                         </span>
                       </div>
                       <div className="flex items-center text-sm text-green-600">
-                        <span>You save ${(product.originalPrice - product.price).toFixed(2)}</span>
+                        <span>You save ₦{(product.originalPrice - product.price).toFixed(2)}</span>
                       </div>
                     </div>
 

@@ -299,8 +299,8 @@ export default function PrivacyPage() {
               </p>
               <div className="space-y-2 text-sm">
                 <p><strong>Email:</strong> privacy@gote.com</p>
-                <p><strong>Address:</strong> 123 Commerce St, Privacy Department, City, State 12345</p>
-                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                <p><strong>Address:</strong> 123 Allen Avenue, Privacy Department, Lagos, Nigeria</p>
+                <p><strong>Phone:</strong> +234 812 9380 869</p>
               </div>
               <div className="mt-4">
                 <Link href="/support" className="inline-flex items-center text-primary hover:underline text-sm">
